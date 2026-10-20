@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VerbaFlow AI · English Speaking &amp; Fluency Coach</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Thai:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --card-bg: #111827;
+      --card-border: #1f293d;
+      --accent-indigo: #6366f1;
+      --accent-violet: #8b5cf6;
+      --accent-emerald: #10b981;
+      --accent-amber: #f59e0b;
+      --accent-rose: #f43f5e;
+      --text-main: #f9fafb;
+      --text-muted: #9ca3af;
+      --text-dim: #6b7280;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text-main);
+      font-family: 'Plus Jakarta Sans', 'Noto Sans Thai', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top Bar */
+    header {
+      background: #0f172a;
+      border-bottom: 1px solid var(--card-border);
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #4f46e5, #06b6d4);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    }
+
+    .brand-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #fff;
+    }
+
+    .brand-subtitle {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+    }
+
+    /* Top Controls */
+    .top-controls {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .control-select {
+      background: #1e293b;
+      border: 1px solid var(--card-border);
+      color: #f1f5f9;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-family: inherit;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .control-select:focus {
+      border-color: var(--accent-indigo);
+    }
+
+    .btn-pill {
+      background: #1e293b;
+      border: 1px solid var(--card-border);
+      color: #f1f5f9;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn-pill:hover {
+      background: #334155;
+    }
+
+    /* Main Container */
+    .main-layout {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      flex: 1;
+      height: calc(100vh - 65px);
+      overflow: hidden;
+    }
+
+    /* Left Sidebar: Scenarios */
+    .sidebar {
+      background: #0d1322;
+      border-right: 1px solid var(--card-border);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow-y: auto;
+      padding: 16px;
+      gap: 18px;
+    }
+
+    .sidebar-heading {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-dim);
+      margin-bottom: 8px;
+    }
+
+    .scenario-card {
+      background: #131b2e;
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 12px 14px;
+      cursor: pointer;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      transition: all 0.2s;
+      margin-bottom: 8px;
+    }
+
+    .scenario-card:hover {
+      border-color: var(--accent-indigo);
+      background: #1a243d;
+      transform: translateY(-1px);
+    }
+
+    .scenario-card.active {
+      border-color: var(--accent-indigo);
+      background: rgba(99, 102, 241, 0.12);
+      box-shadow: 0 0 0 1px var(--accent-indigo);
+    }
+
+    .scenario-icon {
+      font-size: 20px;
+      background: #1e293b;
+      padding: 6px;
+      border-radius: 8px;
+      flex-shrink: 0;
+    }
+
+    .scenario-title {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .scenario-desc {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+      margin-top: 4px;
+    }
+
+    /* Chat Area */
+    .chat-area {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      background: #090d16;
+    }
+
+    .scenario-banner {
+      background: linear-gradient(90deg, #131d36, #0e162b);
+      border-bottom: 1px solid var(--card-border);
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .banner-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .banner-desc {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .chat-scroll {
+      flex: 1;
+      padding: 24px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* Message Bubbles */
+    .chat-bubble-row {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-width: 82%;
+      animation: fadeIn 0.25s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .bubble-coach { align-self: flex-start; }
+    .bubble-user { align-self: flex-end; }
+
+    .bubble-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.72rem;
+      color: var(--text-dim);
+    }
+    .bubble-user .bubble-meta { justify-content: flex-end; }
+
+    .bubble-content {
+      padding: 14px 18px;
+      border-radius: 14px;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .bubble-coach .bubble-content {
+      background: #141c2e;
+      border: 1px solid #24314d;
+      color: #f1f5f9;
+      border-top-left-radius: 3px;
+    }
+
+    .bubble-user .bubble-content {
+      background: linear-gradient(135deg, #4f46e5, #4338ca);
+      color: #fff;
+      border-top-right-radius: 3px;
+    }
+
+    .inline-audio-btn {
+      margin-top: 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 0.75rem;
+      color: #cbd5e1;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .inline-audio-btn:hover {
+      background: rgba(255, 255, 255, 0.16);
+      color: #fff;
+    }
+
+    /* Grammar & Feedback Card */
+    .feedback-card {
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-left: 4px solid var(--accent-emerald);
+      border-radius: 10px;
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      font-size: 0.85rem;
+      margin-top: 4px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+    }
+
+    .feedback-card.has-error {
+      border-left-color: var(--accent-amber);
+    }
+
+    .feedback-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 700;
+      font-size: 0.78rem;
+      color: var(--accent-emerald);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .feedback-card.has-error .feedback-header {
+      color: var(--accent-amber);
+    }
+
+    .correction-line {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      background: #182238;
+      padding: 8px 12px;
+      border-radius: 6px;
+    }
+
+    .diff-wrong {
+      color: #f87171;
+      text-decoration: line-through;
+      font-size: 0.82rem;
+    }
+
+    .diff-correct {
+      color: #34d399;
+      font-weight: 600;
+      font-size: 0.92rem;
+    }
+
+    .explanation-box {
+      font-size: 0.82rem;
+      color: #cbd5e1;
+      line-height: 1.5;
+    }
+
+    .native-pill-row {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .native-pill {
+      background: rgba(99, 102, 241, 0.12);
+      border: 1px solid rgba(99, 102, 241, 0.25);
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 0.78rem;
+      color: #c7d2fe;
+    }
+
+    .vocab-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(245, 158, 11, 0.12);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      color: #fde68a;
+    }
+
+    /* Bottom Input Bar */
+    .input-bar {
+      padding: 16px 24px;
+      background: #0f1628;
+      border-top: 1px solid var(--card-border);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .status-text {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .mic-button {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6366f1, #4f46e5);
+      border: none;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+
+    .mic-button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 20px rgba(99, 102, 241, 0.6);
+    }
+
+    .mic-button.recording {
+      background: linear-gradient(135deg, #f43f5e, #e11d48);
+      animation: micPulse 1.2s infinite;
+    }
+
+    @keyframes micPulse {
+      0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.7); }
+      70% { transform: scale(1.08); box-shadow: 0 0 0 14px rgba(244, 63, 94, 0); }
+      100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(244, 63, 94, 0); }
+    }
+
+    .text-input-wrapper {
+      flex: 1;
+    }
+
+    .text-input {
+      width: 100%;
+      background: #162238;
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      color: #fff;
+      font-family: inherit;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .text-input:focus {
+      border-color: var(--accent-indigo);
+    }
+
+    .send-btn {
+      padding: 0 22px;
+      height: 50px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: #fff;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+
+    .send-btn:hover {
+      background: #28374d;
+      border-color: #475569;
+    }
+
+    /* Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+    }
+
+    .modal {
+      background: #121826;
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      width: 480px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation Header -->
+  <header>
+    <div class="brand">
+      <div class="brand-icon">🗣️</div>
+      <div>
+        <div class="brand-title">VerbaFlow AI</div>
+        <div class="brand-subtitle">English Speaking Coach · Real-time Grammar &amp; Native Fluency</div>
+      </div>
+    </div>
+
+    <!-- Voice & Engine Selectors -->
+    <div class="top-controls">
+      <!-- Engine Selector -->
+      <select class="control-select" id="engineSelect" onchange="onEngineChange()">
+        <option value="edge_tts">⚡ Edge-TTS (100% Free · Unlimited)</option>
+        <option value="elevenlabs">💎 ElevenLabs (Ultra-Realistic Neural)</option>
+      </select>
+
+      <!-- Voice Accent Selector -->
+      <select class="control-select" id="voiceSelect" onchange="savePreferences()">
+        <option value="us_female">🇺🇸 US Female (Jenny / Rachel)</option>
+        <option value="us_male">🇺🇸 US Male (Guy / Adam)</option>
+        <option value="uk_female">🇬🇧 UK Female (Sonia)</option>
+        <option value="uk_male">🇬🇧 UK Male (Ryan)</option>
+        <option value="au_female">🇦🇺 AU Female (Natasha)</option>
+      </select>
+
+      <!-- Speaking Speed -->
+      <select class="control-select" id="speedSelect" onchange="savePreferences()">
+        <option value="0.85">⏱️ 0.85x (Slow / Learn)</option>
+        <option value="1.0" selected>⏱️ 1.0x (Normal)</option>
+        <option value="1.15">⏱️ 1.15x (Native Fast)</option>
+      </select>
+
+      <button class="btn-pill" onclick="openSettingsModal()">
+        ⚙️ Settings
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Split Layout -->
+  <div class="main-layout">
+    
+    <!-- Left Sidebar: Scenarios -->
+    <aside class="sidebar">
+      <div class="sidebar-heading">A. Business &amp; Career</div>
+      <div id="scenariosGroupA"></div>
+
+      <div class="sidebar-heading" style="margin-top: 10px;">B. Daily Life &amp; Fluency</div>
+      <div id="scenariosGroupB"></div>
+
+      <div class="sidebar-heading" style="margin-top: 10px;">C. Grammar Lab &amp; Free Talk</div>
+      <div id="scenariosGroupC"></div>
+    </aside>
+
+    <!-- Main Chat & Feedback Area -->
+    <section class="chat-area">
+      <!-- Scenario Title Banner -->
+      <div class="scenario-banner">
+        <div>
+          <div class="banner-title" id="activeScenarioTitle">💼 Job Interview</div>
+          <div class="banner-desc" id="activeScenarioDesc">ซ้อมตอบคำถามสัมภาษณ์งานคลาสสิก</div>
+        </div>
+        <button class="btn-pill" onclick="resetConversation()">🔄 Start Over</button>
+      </div>
+
+      <!-- Messages Timeline -->
+      <div class="chat-scroll" id="chatContainer">
+        <!-- Messages appended dynamically -->
+      </div>
+
+      <!-- Bottom Voice Input Bar -->
+      <div class="input-bar">
+        <div class="status-text">
+          <span id="speechStatus">Ready: Click the mic to speak in English</span>
+          <span id="engineBadge" style="font-family: 'Fira Code', monospace; color: var(--accent-indigo);">Voice: Edge-TTS (en-US-Jenny)</span>
+        </div>
+
+        <div class="input-row">
+          <button class="mic-button" id="micBtn" onclick="toggleMic()" title="Click to speak / stop">
+            🎙️
+          </button>
+          <div class="text-input-wrapper">
+            <input type="text" class="text-input" id="userInput" placeholder="Speak with mic or type your response in English..." onkeydown="onInputKey(event)">
+          </div>
+          <button class="send-btn" onclick="submitSpeech()">
+            Send
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <!-- Settings Modal -->
+  <div class="modal-backdrop" id="settingsModal">
+    <div class="modal">
+      <h3 style="color: #fff; font-size: 1.1rem;">⚙️ AI Engine Settings</h3>
+      
+      <div>
+        <label style="font-size: 0.8rem; color: var(--text-muted);">Google Gemini API Key (Optional for Open-ended Coaching)</label>
+        <input type="password" id="geminiKeyInput" class="text-input" style="margin-top: 4px;" placeholder="AIzaSy... (Leave empty to use built-in engine)">
+      </div>
+
+      <div>
+        <label style="font-size: 0.8rem; color: var(--text-muted);">OpenAI API Key (Optional)</label>
+        <input type="password" id="openaiKeyInput" class="text-input" style="margin-top: 4px;" placeholder="sk-... (Leave empty to use built-in engine)">
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <input type="checkbox" id="autoPlayCheckbox" checked>
+        <label for="autoPlayCheckbox" style="font-size: 0.82rem; color: #cbd5e1; cursor: pointer;">Auto-play Coach's Voice response</label>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 8px;">
+        <button class="btn-pill" onclick="closeSettingsModal()">Cancel</button>
+        <button class="btn-pill" style="background: var(--accent-indigo); border: none;" onclick="saveSettingsModal()">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hidden Audio Player -->
+  <audio id="coachAudioPlayer"></audio>
+
+  <script>
+    let scenarios = [];
+    let currentScenario = null;
+    let conversationHistory = [];
+    let isRecording = false;
+    let recognition = null;
+
+    // Preferences
+    let currentEngine = localStorage.getItem("tutor_engine") || "edge_tts";
+    let currentVoice = localStorage.getItem("tutor_voice") || "us_female";
+    let currentSpeed = localStorage.getItem("tutor_speed") || "1.0";
+    let customGeminiKey = localStorage.getItem("tutor_gemini_key") || "";
+    let customOpenaiKey = localStorage.getItem("tutor_openai_key") || "";
+    let autoPlay = localStorage.getItem("tutor_autoplay") !== "false";
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      // Restore UI values
+      document.getElementById("engineSelect").value = currentEngine;
+      document.getElementById("voiceSelect").value = currentVoice;
+      document.getElementById("speedSelect").value = currentSpeed;
+      updateBadge();
+
+      await loadScenarios();
+      initSpeechRecognition();
+    });
+
+    function updateBadge() {
+      const badge = document.getElementById("engineBadge");
+      const v = document.getElementById("voiceSelect").options[document.getElementById("voiceSelect").selectedIndex].text;
+      badge.textContent = currentEngine === "elevenlabs" 
+        ? `💎 ElevenLabs (${v})` 
+        : `⚡ Edge-TTS (${v})`;
+    }
+
+    function onEngineChange() {
+      currentEngine = document.getElementById("engineSelect").value;
+      localStorage.setItem("tutor_engine", currentEngine);
+      updateBadge();
+    }
+
+    function savePreferences() {
+      currentVoice = document.getElementById("voiceSelect").value;
+      currentSpeed = document.getElementById("speedSelect").value;
+      localStorage.setItem("tutor_voice", currentVoice);
+      localStorage.setItem("tutor_speed", currentSpeed);
+      updateBadge();
+    }
+
+    // Load Scenarios
+    async function loadScenarios() {
+      try {
+        const resp = await fetch("/api/scenarios");
+        scenarios = await resp.json();
+        
+        const groupA = document.getElementById("scenariosGroupA");
+        const groupB = document.getElementById("scenariosGroupB");
+        const groupC = document.getElementById("scenariosGroupC");
+
+        groupA.innerHTML = "";
+        groupB.innerHTML = "";
+        groupC.innerHTML = "";
+
+        scenarios.forEach((sc, idx) => {
+          const card = document.createElement("div");
+          card.className = "scenario-card" + (idx === 0 ? " active" : "");
+          card.onclick = () => selectScenario(sc, card);
+          card.innerHTML = `
+            <div class="scenario-icon">${sc.icon}</div>
+            <div>
+              <div class="scenario-title">${sc.title}</div>
+              <div class="scenario-desc">${sc.desc}</div>
+            </div>
+          `;
+
+          if (sc.category.startsWith("A")) groupA.appendChild(card);
+          else if (sc.category.startsWith("B")) groupB.appendChild(card);
+          else groupC.appendChild(card);
+        });
+
+        if (scenarios.length > 0) {
+          selectScenario(scenarios[0]);
+        }
+      } catch (err) {
+        console.error("Failed to load scenarios:", err);
+      }
+    }
+
+    function selectScenario(sc, cardElement) {
+      currentScenario = sc;
+      document.querySelectorAll(".scenario-card").forEach(c => c.classList.remove("active"));
+      if (cardElement) {
+        cardElement.classList.add("active");
+      }
+
+      document.getElementById("activeScenarioTitle").textContent = `${sc.icon} ${sc.title}`;
+      document.getElementById("activeScenarioDesc").textContent = sc.desc;
+
+      resetConversation();
+    }
+
+    function resetConversation() {
+      conversationHistory = [];
+      const container = document.getElementById("chatContainer");
+      container.innerHTML = "";
+
+      if (currentScenario && currentScenario.greeting) {
+        appendCoachMessage(currentScenario.greeting, null, autoPlay);
+      }
+    }
+
+    // Speech Recognition
+    function initSpeechRecognition() {
+      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SR) {
+        document.getElementById("speechStatus").textContent = "Browser speech recognition not supported. Please use Chrome/Edge or type text.";
+        return;
+      }
+
+      recognition = new SR();
+      recognition.continuous = false;
+      recognition.interimResults = true;
+      recognition.lang = "en-US"; // Native English recognition
+
+      recognition.onstart = () => {
+        isRecording = true;
+        document.getElementById("micBtn").classList.add("recording");
+        document.getElementById("speechStatus").textContent = "🎙️ Listening to your English speech...";
+      };
+
+      recognition.onresult = (e) => {
+        let transcript = "";
+        for (let i = e.resultIndex; i < e.results.length; ++i) {
+          transcript += e.results[i][0].transcript;
+        }
+        document.getElementById("userInput").value = transcript;
+      };
+
+      recognition.onerror = (e) => {
+        console.error("Speech Recognition Error:", e);
+        stopMic();
+        document.getElementById("speechStatus").textContent = `Error: ${e.error}`;
+      };
+
+      recognition.onend = () => {
+        stopMic();
+        const input = document.getElementById("userInput");
+        if (input.value.trim()) {
+          document.getElementById("speechStatus").textContent = "Speech recognized! Click 'Send' or review your sentence.";
+        } else {
+          document.getElementById("speechStatus").textContent = "Ready: Click mic to speak in English";
+        }
+      };
+    }
+
+    function toggleMic() {
+      if (!recognition) return;
+      if (isRecording) {
+        recognition.stop();
+        stopMic();
+      } else {
+        document.getElementById("userInput").value = "";
+        try { recognition.start(); } catch(e) {}
+      }
+    }
+
+    function stopMic() {
+      isRecording = false;
+      document.getElementById("micBtn").classList.remove("recording");
+    }
+
+    function onInputKey(e) {
+      if (e.key === "Enter") submitSpeech();
+    }
+
+    // Submit Speech
+    async function submitSpeech() {
+      const input = document.getElementById("userInput");
+      const text = input.value.trim();
+      if (!text) return;
+
+      input.value = "";
+      appendUserMessage(text);
+
+      document.getElementById("speechStatus").textContent = "⏳ Coach Alex is reviewing your grammar & formulating response...";
+
+      try {
+        const resp = await fetch("/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            speech: text,
+            scenario_id: currentScenario ? currentScenario.id : "grammar_freetalk",
+            history: conversationHistory,
+            gemini_key: customGeminiKey,
+            openai_key: customOpenaiKey
+          })
+        });
+
+        const data = await resp.json();
+        document.getElementById("speechStatus").textContent = "Ready: Click mic to speak in English";
+
+        // Append Coach response with grammar feedback card
+        appendCoachMessage(data.reply, data.feedback, autoPlay);
+
+      } catch (err) {
+        console.error("Error submitting chat:", err);
+        document.getElementById("speechStatus").textContent = "Server communication error";
+      }
+    }
+
+    function appendUserMessage(text) {
+      conversationHistory.push({ role: "student", content: text });
+
+      const container = document.getElementById("chatContainer");
+      const row = document.createElement("div");
+      row.className = "chat-bubble-row bubble-user";
+
+      row.innerHTML = `
+        <div class="bubble-meta">
+          <span>YOU (STUDENT)</span>
+        </div>
+        <div class="bubble-content">${escapeHtml(text)}</div>
+      `;
+
+      container.appendChild(row);
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function appendCoachMessage(replyText, feedback, shouldPlayAudio) {
+      conversationHistory.push({ role: "coach", content: replyText });
+
+      const container = document.getElementById("chatContainer");
+      const row = document.createElement("div");
+      row.className = "chat-bubble-row bubble-coach";
+
+      let feedbackHtml = "";
+      if (feedback) {
+        const isErr = feedback.has_error;
+        let altHtml = "";
+        if (feedback.native_alternatives && feedback.native_alternatives.length) {
+          altHtml = `<div class="native-pill-row">
+            ${feedback.native_alternatives.map(a => `<div class="native-pill">✨ ${escapeHtml(a)}</div>`).join("")}
+          </div>`;
+        }
+
+        let vocabHtml = "";
+        if (feedback.vocab_booster && feedback.vocab_booster.length) {
+          vocabHtml = `<div style="display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px;">
+            ${feedback.vocab_booster.map(v => `<div class="vocab-badge">💡 <b>${escapeHtml(v.word)}</b>: ${escapeHtml(v.meaning_th)}</div>`).join("")}
+          </div>`;
+        }
+
+        feedbackHtml = `
+          <div class="feedback-card ${isErr ? "has-error" : ""}">
+            <div class="feedback-header">
+              <span>${isErr ? "⚠️ Grammar & Native Polish" : "✅ Well Said! Native Polish"}</span>
+            </div>
+            ${isErr ? `
+              <div class="correction-line">
+                <div class="diff-wrong">${escapeHtml(feedback.original)}</div>
+                <div class="diff-correct">${escapeHtml(feedback.corrected)}</div>
+              </div>
+            ` : ""}
+            <div class="explanation-box">${escapeHtml(feedback.explanation_th)}</div>
+            ${altHtml}
+            ${vocabHtml}
+          </div>
+        `;
+      }
+
+      row.innerHTML = `
+        <div class="bubble-meta">
+          <span>👩‍🏫 COACH ALEX</span>
+        </div>
+        <div class="bubble-content">
+          ${escapeHtml(replyText)}
+          <br>
+          <button class="inline-audio-btn" onclick="playSpeech('${encodeURIComponent(replyText)}')">
+            🔊 Listen Audio
+          </button>
+        </div>
+        ${feedbackHtml}
+      `;
+
+      container.appendChild(row);
+      container.scrollTop = container.scrollHeight;
+
+      if (shouldPlayAudio) {
+        playSpeech(encodeURIComponent(replyText));
+      }
+    }
+
+    // Audio Playback
+    function playSpeech(encodedText) {
+      const audio = document.getElementById("coachAudioPlayer");
+      const url = `/api/tts?text=${encodedText}&engine=${currentEngine}&voice=${currentVoice}&speed=${currentSpeed}`;
+      audio.src = url;
+      audio.play().catch(e => console.warn("Autoplay was prevented:", e));
+    }
+
+    // Settings Modal
+    function openSettingsModal() {
+      document.getElementById("geminiKeyInput").value = customGeminiKey;
+      document.getElementById("openaiKeyInput").value = customOpenaiKey;
+      document.getElementById("autoPlayCheckbox").checked = autoPlay;
+      document.getElementById("settingsModal").style.display = "flex";
+    }
+
+    function closeSettingsModal() {
+      document.getElementById("settingsModal").style.display = "none";
+    }
+
+    function saveSettingsModal() {
+      customGeminiKey = document.getElementById("geminiKeyInput").value.trim();
+      customOpenaiKey = document.getElementById("openaiKeyInput").value.trim();
+      autoPlay = document.getElementById("autoPlayCheckbox").checked;
+
+      localStorage.setItem("tutor_gemini_key", customGeminiKey);
+      localStorage.setItem("tutor_openai_key", customOpenaiKey);
+      localStorage.setItem("tutor_autoplay", autoPlay);
+
+      closeSettingsModal();
+    }
+
+    function escapeHtml(str) {
+      if (!str) return "";
+      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    }
+  </script>
+</body>
+</html>
