@@ -139,11 +139,12 @@ class EnglishTutorHandler(SimpleHTTPRequestHandler):
 
 
 def run_server(port=PORT):
-    server_address = ("127.0.0.1", port)
+    # Bind to 0.0.0.0 for cloud hosting (Render, Docker) and local access
+    server_address = ("0.0.0.0", port)
     httpd = ThreadingHTTPServer(server_address, EnglishTutorHandler)
     print("\n=======================================================")
     print(" [VerbaFlow AI - English Voice Coach Running]")
-    print(f" http://127.0.0.1:{port}")
+    print(f" Port: {port} (Bound to 0.0.0.0)")
     print("=======================================================\n")
     try:
         httpd.serve_forever()
@@ -153,5 +154,11 @@ def run_server(port=PORT):
 
 
 if __name__ == "__main__":
-    port = int(sys.argv[1]) if len(sys.argv) > 1 else PORT
+    env_port = os.environ.get("PORT")
+    if env_port:
+        port = int(env_port)
+    elif len(sys.argv) > 1:
+        port = int(sys.argv[1])
+    else:
+        port = PORT
     run_server(port)
